@@ -2,12 +2,8 @@ package ru.job4j.concurrent;
 
 public class ConsoleProgress implements Runnable {
 
-    public static final String FIRST = "\\";
-    public static final String SECOND = "|";
-    public static final String THIRD = "/";
-    private String current = FIRST;
-
-    private boolean flag = true;
+    public static final String[] STATUS = {"\\", "|", "/"};
+    public static int index = 0;
 
     @Override
     public void run() {
@@ -16,22 +12,16 @@ public class ConsoleProgress implements Runnable {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                e.printStackTrace();
             }
         }
     }
 
     public String next() {
-        if (current.equals(FIRST) || current.equals(THIRD)) {
-            current = SECOND;
-        } else if (flag) {
-            current = THIRD;
-            flag = false;
-        } else {
-            current = FIRST;
-            flag = true;
+        if (index == STATUS.length) {
+            index = 0;
         }
-        return current;
+        return STATUS[index++];
     }
 
     public static void main(String[] args) throws InterruptedException {
