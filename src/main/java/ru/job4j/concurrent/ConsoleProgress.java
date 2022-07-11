@@ -8,20 +8,16 @@ public class ConsoleProgress implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            System.out.print("\r load: " + next());
+            System.out.print("\r load: " + STATUS[index++]);
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+            if (index == STATUS.length) {
+                index = 0;
+            }
         }
-    }
-
-    public String next() {
-        if (index == STATUS.length) {
-            index = 0;
-        }
-        return STATUS[index++];
     }
 
     public static void main(String[] args) throws InterruptedException {
