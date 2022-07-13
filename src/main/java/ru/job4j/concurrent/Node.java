@@ -1,6 +1,6 @@
 package ru.job4j.concurrent;
 
-public final class Node<T extends Cloneable> {
+public final class Node<T> {
     private final Node<T> next;
     private final T value;
 
