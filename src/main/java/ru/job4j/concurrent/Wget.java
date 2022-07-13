@@ -31,10 +31,11 @@ public class Wget implements Runnable {
                 if (bytesWrited >= speed) {
                     endTime = System.currentTimeMillis() - startTime;
                     if (endTime < ONE_SEC) {
-                        bytesWrited = 0;
                         Thread.sleep(ONE_SEC - endTime);
                     }
                 }
+                bytesWrited = 0;
+                startTime = System.currentTimeMillis();
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
             }
         } catch (IOException e) {
