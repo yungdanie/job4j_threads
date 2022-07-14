@@ -11,7 +11,7 @@ public final class ContentLoad {
     private final File file;
 
     public ContentLoad(File file) {
-        this.file = file;
+        this.file = new File(file.toString());
     }
 
     private String getContent(Predicate<Character> filter) {
