@@ -1,9 +1,13 @@
 package ru.job4j.concurrent;
 
+import net.jcip.annotations.GuardedBy;
+
 import java.io.*;
 import java.util.function.Predicate;
 
 public class ContentLoad {
+
+    @GuardedBy("this")
     private final File file;
 
     public ContentLoad(File file) {
