@@ -15,18 +15,16 @@ public final class ContentSave {
     private final File file;
 
     public ContentSave(File file) {
-        this.file = file;
+        this.file = new File(file.toString());
     }
 
     public void saveContent(String content) {
-        synchronized (this) {
-            try (BufferedOutputStream o = new BufferedOutputStream(new FileOutputStream(file))) {
-                for (int i = 0; i < content.length(); i += 1) {
-                    o.write(content.charAt(i));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        try (BufferedOutputStream o = new BufferedOutputStream(new FileOutputStream(file))) {
+            for (int i = 0; i < content.length(); i += 1) {
+                o.write(content.charAt(i));
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
