@@ -3,7 +3,7 @@ package ru.job4j.concurrent.cash;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AccountStorageTest {
 
@@ -13,7 +13,7 @@ class AccountStorageTest {
         storage.add(new Account(1, 100));
         var firstAccount = storage.getById(1)
                 .orElseThrow(() -> new IllegalStateException("Not found account by id = 1"));
-        assertEquals(firstAccount.amount(), 100);
+        assertThat(firstAccount.amount()).isEqualTo(100);
     }
 
     @Test
@@ -23,7 +23,7 @@ class AccountStorageTest {
         storage.update(new Account(1, 200));
         var firstAccount = storage.getById(1)
                 .orElseThrow(() -> new IllegalStateException("Not found account by id = 1"));
-        assertEquals(firstAccount.amount(), 200);
+        assertThat(firstAccount.amount()).isEqualTo(200);
     }
 
     @Test
@@ -31,7 +31,7 @@ class AccountStorageTest {
         var storage = new AccountStorage();
         storage.add(new Account(1, 100));
         storage.delete(1);
-        assertTrue(storage.getById(1).isEmpty());
+        assertThat(storage.getById(1)).isEmpty();
     }
 
     @Test
@@ -44,8 +44,8 @@ class AccountStorageTest {
                 .orElseThrow(() -> new IllegalStateException("Not found account by id = 1"));
         var secondAccount = storage.getById(2)
                 .orElseThrow(() -> new IllegalStateException("Not found account by id = 2"));
-        assertEquals(firstAccount.amount(), 0);
-        assertEquals(secondAccount.amount(), 200);
+        assertThat(firstAccount.amount()).isEqualTo(0);
+        assertThat(secondAccount.amount()).isEqualTo(200);
     }
 
     @Test
