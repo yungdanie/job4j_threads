@@ -11,7 +11,7 @@ import java.io.IOException;
 @ThreadSafe
 public final class ContentSave {
 
-    @GuardedBy("this")
+    @GuardedBy("file")
     private final File file;
 
     public ContentSave(File file) {
@@ -19,12 +19,14 @@ public final class ContentSave {
     }
 
     public void saveContent(String content) {
-        try (BufferedOutputStream o = new BufferedOutputStream(new FileOutputStream(file))) {
-            for (int i = 0; i < content.length(); i += 1) {
-                o.write(content.charAt(i));
+        synchronized (file) {
+            try (BufferedOutputStream o = new BufferedOutputStream(new FileOutputStream(file))) {
+                for (int i = 0; i < content.length(); i += 1) {
+                    o.write(content.charAt(i));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
