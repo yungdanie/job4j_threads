@@ -5,7 +5,7 @@ import net.jcip.annotations.GuardedBy;
 import java.io.*;
 import java.util.function.Predicate;
 
-public class ContentLoad {
+public final class ContentLoad {
 
     @GuardedBy("this")
     private final File file;
