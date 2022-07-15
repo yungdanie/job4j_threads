@@ -8,7 +8,9 @@ import java.util.Queue;
 
 @ThreadSafe
 public class SimpleBlockingQueue<T> {
+    @GuardedBy("this")
     private int size;
+    @GuardedBy("this")
     private final int capacity;
     @GuardedBy("this")
     private final Queue<T> queue = new LinkedList<>();
@@ -23,7 +25,7 @@ public class SimpleBlockingQueue<T> {
                 try {
                     this.wait();
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    Thread.currentThread().interrupt();
                 }
             }
             queue.offer(value);
@@ -34,17 +36,19 @@ public class SimpleBlockingQueue<T> {
 
     public T poll() {
         synchronized (this) {
-            T returnObject;
-            while (queue.isEmpty()) {
+            T returnObject = null;
+            while (queue.isEmpty() && !Thread.currentThread().isInterrupted()) {
                 try {
                     this.wait();
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    Thread.currentThread().interrupt();
                 }
             }
-            returnObject = queue.poll();
-            size--;
-            this.notify();
+            if (!Thread.currentThread().isInterrupted()) {
+                returnObject = queue.poll();
+                size--;
+                this.notify();
+            }
             return returnObject;
         }
     }
