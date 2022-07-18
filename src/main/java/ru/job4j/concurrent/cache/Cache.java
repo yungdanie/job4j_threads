@@ -22,7 +22,11 @@ public class Cache {
         }) != null;
     }
 
-    public void delete(Base model) {
-        memory.remove(model.getId());
+    public boolean delete(Base model) {
+        return memory.remove(model.getId()) != null;
+    }
+
+    public boolean delete(int id) {
+        return memory.remove(id) != null;
     }
 }
