@@ -8,8 +8,7 @@ import java.util.Queue;
 
 @ThreadSafe
 public class SimpleBlockingQueue<T> {
-    @GuardedBy("this")
-    private int size;
+
     @GuardedBy("this")
     private final int capacity;
     @GuardedBy("this")
@@ -19,34 +18,25 @@ public class SimpleBlockingQueue<T> {
         this.capacity = capacity;
     }
 
-    public void offer(T value) {
+    public void offer(T value) throws InterruptedException {
         synchronized (this) {
-            while (size >= capacity) {
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
+            while (queue.size() >= capacity) {
+                this.wait();
             }
             queue.offer(value);
-            size++;
             this.notify();
         }
     }
 
-    public T poll() {
+    public T poll() throws InterruptedException {
         synchronized (this) {
             T returnObject = null;
             while (queue.isEmpty() && !Thread.currentThread().isInterrupted()) {
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
+                this.wait();
+
             }
             if (!Thread.currentThread().isInterrupted()) {
                 returnObject = queue.poll();
-                size--;
                 this.notify();
             }
             return returnObject;
