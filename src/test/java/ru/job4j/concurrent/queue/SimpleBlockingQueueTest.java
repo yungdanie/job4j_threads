@@ -2,6 +2,10 @@ package ru.job4j.concurrent.queue;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SimpleBlockingQueueTest {
@@ -59,4 +63,37 @@ class SimpleBlockingQueueTest {
         thread2.join();
     }
 
+    @Test
+    public void whenFetchAllThenGetIt() throws InterruptedException {
+        final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
+        final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(20);
+        Thread producer = new Thread(
+                () -> {
+                    for (int i = 0; i < 4; i++) {
+                        try {
+                            queue.offer(i);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                });
+        producer.start();
+        producer.join();
+        producer.interrupt();
+        Thread consumer = new Thread(
+                () -> {
+                    while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
+                        try {
+                            buffer.add(queue.poll());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                });
+        consumer.start();
+        consumer.interrupt();
+        consumer.join();
+        assertThat(buffer).isEqualTo(List.of(0, 1, 2, 3));
+    }
 }

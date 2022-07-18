@@ -33,13 +33,16 @@ public class SimpleBlockingQueue<T> {
             T returnObject = null;
             while (queue.isEmpty() && !Thread.currentThread().isInterrupted()) {
                 this.wait();
-
             }
-            if (!Thread.currentThread().isInterrupted()) {
-                returnObject = queue.poll();
-                this.notify();
-            }
+            returnObject = queue.poll();
+            this.notify();
             return returnObject;
+        }
+    }
+
+    public boolean isEmpty() {
+        synchronized (this) {
+            return queue.isEmpty();
         }
     }
 
