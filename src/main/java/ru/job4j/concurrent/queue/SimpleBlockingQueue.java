@@ -31,7 +31,7 @@ public class SimpleBlockingQueue<T> {
     public T poll() throws InterruptedException {
         synchronized (this) {
             T returnObject = null;
-            while (queue.isEmpty() && !Thread.currentThread().isInterrupted()) {
+            while (queue.isEmpty()) {
                 this.wait();
             }
             returnObject = queue.poll();
