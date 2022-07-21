@@ -7,19 +7,14 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class ThreadPool {
-    private final int size = Runtime.getRuntime().availableProcessors();
+
+    private final static int TASK_SIZE = 100;
+
     private final List<Thread> threads = new LinkedList<>();
-    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(100);
+    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(TASK_SIZE);
 
-    public void work(Runnable job) {
-        try {
-            tasks.offer(job);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    public void start() {
+    public ThreadPool() {
+        int size = Runtime.getRuntime().availableProcessors();
         IntStream.range(0, size).forEach(x -> threads.add(new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
@@ -30,6 +25,10 @@ public class ThreadPool {
             }
         })));
         threads.forEach(Thread::start);
+    }
+
+    public void work(Runnable job) throws InterruptedException {
+        tasks.offer(job);
     }
 
     public void shutdown() {
