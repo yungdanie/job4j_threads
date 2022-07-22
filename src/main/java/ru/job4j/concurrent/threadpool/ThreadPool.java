@@ -8,14 +8,13 @@ import java.util.stream.IntStream;
 
 public class ThreadPool {
 
-    private final static int TASK_SIZE = 100;
+    private final static int SIZE = Runtime.getRuntime().availableProcessors();
 
     private final List<Thread> threads = new LinkedList<>();
-    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(TASK_SIZE);
+    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(SIZE);
 
     public ThreadPool() {
-        int size = Runtime.getRuntime().availableProcessors();
-        IntStream.range(0, size).forEach(x -> threads.add(new Thread(() -> {
+        IntStream.range(0, SIZE).forEach(x -> threads.add(new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     tasks.poll().run();
