@@ -13,7 +13,9 @@ public class EmailNotification {
     }
 
     public void emailTo(User user) {
-        pool.submit(() -> send(user.email(), "body", user.email()));
+        String subject = "Notification " + user.userName() + "to email" + user.email();
+        String body = "Add a new event to " + user.userName();
+        pool.submit(() -> send(subject, body, user.email()));
     }
 
     public void close() {
