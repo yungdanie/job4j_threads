@@ -1,9 +1,7 @@
 package ru.job4j.concurrent.email;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class EmailNotification {
     private final ExecutorService pool = Executors.newCachedThreadPool();
