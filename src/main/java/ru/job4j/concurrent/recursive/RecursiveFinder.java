@@ -20,7 +20,7 @@ public class RecursiveFinder<T> extends RecursiveTask<Integer> {
     protected Integer compute() {
         if ((to - from) < 5) {
             for (int i = from; i <= to; i++) {
-                if (array[i].equals(etalon)) {
+                if (etalon.equals(array[i])) {
                     return i;
                 }
             }
@@ -33,6 +33,6 @@ public class RecursiveFinder<T> extends RecursiveTask<Integer> {
         right.fork();
         int result1 = left.join();
         int result2 = right.join();
-        return result1 != -1 ? result1 : result2;
+        return Math.max(result1, result2);
     }
 }

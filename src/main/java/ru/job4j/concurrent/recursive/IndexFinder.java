@@ -5,6 +5,9 @@ import java.util.concurrent.ForkJoinPool;
 public class IndexFinder<T> {
 
     public int getIndex(T[] array, T etalon) {
+        if (array == null || etalon == null) {
+            throw new IllegalArgumentException();
+        }
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         int result = forkJoinPool.invoke(new RecursiveFinder<>(array, 0, array.length - 1, etalon));
         if (result == -1) {
