@@ -16,8 +16,7 @@ class RecursiveFinderTest {
         IntStream.range(0, arraySize + 1).forEach(x -> objects[x] = new Object());
         int expected = new Random().nextInt(arraySize);
         objects[expected] = etalon;
-        IndexFinder<Object> indexFinder = new IndexFinder<>();
-        int result = indexFinder.getIndex(objects, etalon);
+        int result = RecursiveFinder.getIndex(objects, etalon);
         Assertions.assertThat(result).isEqualTo(expected);
     }
 
@@ -30,8 +29,7 @@ class RecursiveFinderTest {
         IntStream.range(0, arraySize + 1).forEach(x -> numbers[x] = random.nextInt());
         int expected = random.nextInt(arraySize);
         numbers[expected] = etalon;
-        IndexFinder<Integer> indexFinder = new IndexFinder<>();
-        int result = indexFinder.getIndex(numbers, etalon);
+        int result = RecursiveFinder.getIndex(numbers, etalon);
         Assertions.assertThat(result).isEqualTo(expected);
     }
 
@@ -44,8 +42,7 @@ class RecursiveFinderTest {
         IntStream.range(0, arraySize + 1).forEach(x -> numbers[x] = random.nextInt());
         int expected = random.nextInt(arraySize);
         numbers[expected] = etalon;
-        IndexFinder<Integer> indexFinder = new IndexFinder<>();
-        int result = indexFinder.getIndex(numbers, etalon);
+        int result = RecursiveFinder.getIndex(numbers, etalon);
         Assertions.assertThat(result).isEqualTo(expected);
     }
 
@@ -57,24 +54,19 @@ class RecursiveFinderTest {
             Integer etalon = 101;
             Integer[] numbers = new Integer[arraySize + 1];
             IntStream.range(0, arraySize + 1).forEach(x -> numbers[x] = random.nextInt(100));
-            IndexFinder<Integer> indexFinder = new IndexFinder<>();
-            indexFinder.getIndex(numbers, etalon);
+            RecursiveFinder.getIndex(numbers, etalon);
         });
     }
 
     @Test
     void whenInitArrayAsNull() {
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            IndexFinder<Integer> indexFinder = new IndexFinder<>();
-            indexFinder.getIndex(null, 1);
-        });
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () ->
+                RecursiveFinder.getIndex(null, 1));
     }
 
     @Test
     void whenInitEtalonAsNull() {
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            IndexFinder<Integer> indexFinder = new IndexFinder<>();
-            indexFinder.getIndex(new Integer[] {1, 2, 3}, null);
-        });
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () ->
+                RecursiveFinder.getIndex(new Integer[] {1, 2, 3}, null));
     }
 }
