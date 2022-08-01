@@ -18,7 +18,7 @@ public class RecursiveFinder<T> extends RecursiveTask<Integer> {
 
     @Override
     protected Integer compute() {
-        if ((to - from) < 5) {
+        if ((to - from) < 10) {
             for (int i = from; i <= to; i++) {
                 if (etalon.equals(array[i])) {
                     return i;
