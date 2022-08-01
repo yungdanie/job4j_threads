@@ -9,6 +9,8 @@ public class RecursiveFinder<T> extends RecursiveTask<Integer> {
     private final int to;
     private final T etalon;
 
+    public static final int BARRIER = 10;
+
     private RecursiveFinder(T[] array, int from, int to, T etalon) {
         this.array = array;
         this.from = from;
@@ -18,7 +20,7 @@ public class RecursiveFinder<T> extends RecursiveTask<Integer> {
 
     @Override
     protected Integer compute() {
-        if ((to - from) < 10) {
+        if ((to - from) < BARRIER) {
             for (int i = from; i <= to; i++) {
                 if (etalon.equals(array[i])) {
                     return i;
