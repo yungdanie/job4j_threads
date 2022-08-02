@@ -10,27 +10,20 @@ public class TopicService implements Service {
 
     @Override
     public Resp process(Req req) {
-        Resp resp = null;
+        Resp resp = new Resp("", "501 Not Implemented");
         if ("GET".equals(req.httpRequestType())) {
-            ConcurrentHashMap<String, ConcurrentLinkedQueue<String>> topic = map.putIfAbsent(req.getSourceName(),
+            map.putIfAbsent(req.getSourceName(),
                     new ConcurrentHashMap<>());
-            if (topic == null) {
-                topic = map.get(req.getSourceName());
-            }
-            ConcurrentLinkedQueue<String> queue = topic.putIfAbsent(req.getParam(), new ConcurrentLinkedQueue<>());
-            resp = new Resp("", "200 OK");
-            if (queue != null) {
-                resp = new Resp(queue.poll(), "200 OK");
-            }
+            map.get(req.getSourceName()).putIfAbsent(req.getParam(), new ConcurrentLinkedQueue<>());
+            var res = map.get(req.getSourceName()).get(req.getParam()).poll();
+            resp = new Resp(res != null ? res : "", "200 OK");
         } else if ("POST".equals(req.httpRequestType())) {
-            ConcurrentHashMap<String, ConcurrentLinkedQueue<String>> topic = map.putIfAbsent(req.getSourceName(),
-                    new ConcurrentHashMap<>());
-            if (topic == null) {
-                topic = map.get(req.getSourceName());
+            ConcurrentHashMap<String, ConcurrentLinkedQueue<String>> topic = map.get(req.getSourceName());
+            if (topic != null) {
+                topic.forEachValue(1, x -> x.add(req.getParam()));
+                resp = new Resp("", "200 OK");
             }
-            topic.forEachValue(1, x -> x.add(req.getParam()));
-            resp = new Resp("", "200 OK");
         }
-        return resp != null ? resp : new Resp("", "204 No Content");
+        return resp;
     }
 }
